@@ -119,6 +119,19 @@ npm run prisma:studio         # Open Prisma Studio
 
 ## 🎨 Customization
 
+### Images & Background
+To add product images and a site background image, put the files in `public/images/`:
+
+- `public/images/hydroponic-bg.jpg` — optional background image used when you enable the CSS block in `app/globals.css`.
+- `public/images/spinach.jpg`, `public/images/basil.jpg`, `public/images/lettuce.jpg` — product images (optional).
+
+If you don't add product images, the site will use small SVG placeholders included in `public/images/sample-plant-1.svg`, `sample-plant-2.svg`, and `sample-plant-3.svg`.
+
+Recommended sizes: 1400–2000px wide for hero/background images, and ~800px wide for product photos. To add the global background, place `hydroponic-bg.jpg` in `public/images/` and then open `app/globals.css` and uncomment the `body { background-image: ... }` block.
+
+I also added a small "reveal on scroll" animation (see `components/ui/Reveal.tsx`) and native smooth scrolling (`html { scroll-behavior: smooth; }`) to give the site a more fluid, flowing feel.
+
+
 ### Colors
 Edit `tailwind.config.js` to customize the color scheme:
 - Primary: Sage Green

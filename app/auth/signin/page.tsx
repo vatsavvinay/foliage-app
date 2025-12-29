@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn, getSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,14 +18,24 @@ export default function SignInPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const callbackUrl = searchParams.get('callbackUrl') ?? '/';
     const res = await signIn('credentials', {
       redirect: false,
       email,
       password,
+      callbackUrl,
     });
     setLoading(false);
     if (res?.ok) {
-      router.push('/');
+      const session = await getSession();
+      const role = (session?.user as any)?.role;
+      if (callbackUrl && callbackUrl !== '/') {
+        router.push(callbackUrl);
+      } else if (role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } else {
       setError(res?.error ?? 'Invalid credentials');
     }

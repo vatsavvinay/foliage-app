@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 
 // In some hosted Postgres setups (e.g., PgBouncer transaction pooling), prepared statements can conflict.
 // Adding pgbouncer=true disables prepared statements for this client to avoid "prepared statement already exists".
@@ -19,6 +20,15 @@ async function main() {
   } catch (err) {
     console.warn('Cleanup skip (could not delete old demo products):', err?.message || err);
   }
+
+  // Admin user
+  const adminEmail = 'admin@foliage.local';
+  const adminPassword = await bcrypt.hash('admin123', 10);
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: { password: adminPassword, role: 'admin' },
+    create: { email: adminEmail, password: adminPassword, role: 'admin', name: 'Admin' },
+  });
 
   // Create categories
   const houseplants = await prisma.category.upsert({

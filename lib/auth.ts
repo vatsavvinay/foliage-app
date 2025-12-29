@@ -36,15 +36,23 @@ export const authOptions: NextAuthOptions = {
           email: user.email ?? undefined,
           name: user.name ?? undefined,
           image: user.image ?? undefined,
+          role: user.role ?? 'customer',
         } as any;
       },
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        (session.user as any).id = user.id;
-        (session.user as any).role = (user as any).role || 'customer';
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = (user as any).id;
+        token.role = (user as any).role || 'customer';
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token) {
+        (session.user as any).id = (token as any).id;
+        (session.user as any).role = (token as any).role || 'customer';
       }
       return session;
     },
@@ -54,7 +62,7 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   session: {
-    strategy: 'database',
+    strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 };

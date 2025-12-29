@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/components/storefront/CartContext';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { openDrawer, totalItems } = useCart();
+  const { data: session, status } = useSession();
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200/60 shadow-sm">
@@ -44,9 +46,24 @@ export function Navbar() {
                 </span>
               )}
             </button>
-            <button className="p-2 hover:bg-neutral-100 rounded-lg transition">
-              <User className="w-5 h-5" />
-            </button>
+            {status === 'authenticated' ? (
+              <div className="flex items-center gap-2">
+                <Link href="/profile" className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-full hover:bg-neutral-100 transition text-sm">
+                  <User className="w-4 h-4" />
+                  Profile
+                </Link>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="px-3 py-2 rounded-full bg-neutral-900 text-white text-sm hover:bg-neutral-800 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link href="/auth/signin" className="p-2 hover:bg-neutral-100 rounded-lg transition">
+                <User className="w-5 h-5" />
+              </Link>
+            )}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 hover:bg-neutral-100 rounded-lg transition"
@@ -78,6 +95,34 @@ export function Navbar() {
             >
               Browse Greens
             </Link>
+            {status === 'authenticated' ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 rounded-lg transition"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    signOut({ callbackUrl: '/' });
+                  }}
+                  className="w-full text-left px-4 py-2 text-neutral-700 hover:bg-neutral-100 rounded-lg transition"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="block px-4 py-2 text-neutral-700 hover:bg-neutral-100 rounded-lg transition"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         )}
       </div>

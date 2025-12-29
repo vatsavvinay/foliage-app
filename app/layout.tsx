@@ -3,8 +3,8 @@ import { Playfair_Display, Montserrat } from 'next/font/google';
 import { Navbar } from '@/components/shared/Navbar';
 import { Footer } from '@/components/shared/Footer';
 import '@/app/globals.css';
-import { CartProvider } from '@/components/storefront/CartContext';
 import { CartDrawer } from '@/components/storefront/CartDrawer';
+import { Providers } from '@/components/Providers';
 
 const headingFont = Playfair_Display({
   subsets: ['latin'],
@@ -36,12 +36,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
       <body className="bg-white text-neutral-900 font-body antialiased">
-        <CartProvider>
+        <Providers>
           <Navbar />
           <main className="min-h-screen">{children}</main>
           <Footer />
           <CartDrawer />
-        </CartProvider>
+        </Providers>
       </body>
     </html>
   );

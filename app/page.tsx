@@ -2,26 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { CalendarDays, Droplets, Leaf, MapPin } from 'lucide-react';
+import { CalendarDays, Droplets, Leaf, MapPin, Sprout, ShoppingBag } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/components/storefront/CartContext';
 
 const GOODLEAF_PRIMARY = '#1f6b3f';
 const GOODLEAF_ACCENT = '#44c455';
 
-const highlights = [
-  {
-    title: 'Pesticide-Free & Soil-Free',
-    description: 'Clean greens grown in a controlled, soil-free environment.',
-    icon: Leaf,
-  },
-  {
-    title: 'Uses Less Water',
-    description: 'Hydroponics reduces water waste for smarter farming.',
-    icon: Droplets,
-  },
+/* const highlights = [
   {
     title: 'Locally Produced',
     description: 'Grown close to home for peak freshness.',
@@ -32,7 +21,7 @@ const highlights = [
     description: 'Harvested at peak flavor for vibrant crunch and taste.',
     icon: CalendarDays,
   },
-];
+]; */
 
 const products = [
   {
@@ -40,7 +29,7 @@ const products = [
     title: 'Lettuce',
     subtitle: 'Crisp, frilled leaves that bring fresh crunch to salads, wraps, and sandwiches.',
     benefits: ['Zero pesticides', 'No washing required', 'Stays crisp longer'],
-    price: 4.5,
+    price: 1.5,
     image: '/images/lettuce.jpg',
   },
   {
@@ -48,7 +37,7 @@ const products = [
     title: 'Basil',
     subtitle: 'Sweet, aromatic basil harvested at peak flavour for pesto, pizzas, and pastas.',
     benefits: ['Greenhouse grown', 'Hand-trimmed leaves', 'Bold aroma'],
-    price: 3.75,
+    price: 1.5,
     image: '/images/basil.jpg',
   },
   {
@@ -56,7 +45,7 @@ const products = [
     title: 'Baby Spinach',
     subtitle: 'Tender, nutrient-dense spinach that elevates smoothies, bowls, and sautés.',
     benefits: ['Tender baby leaves', 'Ready to eat', 'Naturally sweet'],
-    price: 4.0,
+    price: 1.5,
     image: '/images/spinach.jpeg',
   },
 ];
@@ -101,15 +90,8 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                href="#lettuce"
-                className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-white font-bold shadow-lg shadow-sage-200 transition"
-                style={{ backgroundColor: GOODLEAF_PRIMARY }}
-              >
-                Shop Now
-              </Link>
-              <Link
                 href="/products"
-                className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-white font-bold shadow-lg shadow-neutral-300 transition"
+                className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-white font-bold shadow-lg"
                 style={{ backgroundColor: GOODLEAF_ACCENT }}
               >
                 Order Fresh Greens
@@ -121,7 +103,8 @@ export default function HomePage() {
                 Learn About Our Farm
               </Link>
             </div>
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-4">
+            {/* TODO: Re-enable highlights section later */}
+            {/* <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-4">
               {highlights.slice(0, 2).map((item) => (
                 <div
                   key={item.title}
@@ -136,14 +119,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-          <div className="relative rounded-3xl border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl shadow-sage-100 p-8 space-y-4">
-            <p className="text-sm font-semibold tracking-wide text-sage-100">Why it matters</p>
-            <p className="text-neutral-100 text-lg">
-              Hydroponic vertical farms use less water, keep greens protected, and deliver consistent quality. Your
-              favorite lettuce, basil, and baby spinach stay crisp longer and are ready to eat without pesticides.
-            </p>
+            </div> */}
           </div>
         </div>
       </section>
@@ -158,24 +134,6 @@ export default function HomePage() {
             freshness and care.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {highlights.map((item) => (
-            <div
-              key={item.title}
-              className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm hover:-translate-y-1 hover:shadow-md transition"
-            >
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-sage-100 p-3">
-                  <item.icon className="w-5 h-5 text-sage-700" />
-                </div>
-                <div>
-                  <p className="font-semibold text-neutral-900">{item.title}</p>
-                  <p className="text-sm text-neutral-600">{item.description}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -189,7 +147,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="greens">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-8">
+        <div className="space-y-3">
+          <p className="text-sm font-semibold tracking-wide text-sage-700">Our Promise</p>
+          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Always fresh. Always clean.</h3>
+          <p className="text-neutral-700 leading-relaxed">
+            Great food starts with great growing. Every batch is nurtured with attention, integrity, and responsibility—
+            so what reaches your plate is produce we’re truly proud of.
+          </p>
+          {/* <div className="flex flex-wrap gap-3 text-sm text-neutral-800">
+            {['Always Fresh', 'Always Clean', 'Always Grown with Heart'].map((item) => (
+              <span key={item} className="rounded-full bg-sage-50 px-3 py-1 border border-sage-100 font-semibold text-sage-800">
+                {item}
+              </span>
+            ))}
+          </div> */}
+        </div>
+
+        <div className="space-y-4 rounded-3xl border border-neutral-200 bg-white/90 backdrop-blur p-8 shadow-sm">
+          <p className="text-sm font-semibold tracking-wide text-sage-700">Get Fresh Greens Easily</p>
+          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Simple. Fresh. Honest.</h3>
+          <div className="space-y-2 text-neutral-700 leading-relaxed">
+            {[
+              'Explore our fresh produce.',
+              'Place your order.',
+              'Receive freshly harvested greens straight from our farm.',
+            ].map((step) => (
+              <div key={step} className="flex items-start gap-2">
+                <Sprout className="w-4 h-4 text-sage-700 mt-0.5" />
+                <span>{step}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="greens">
         {/* Framer Motion reveal with staggered children */}
         <motion.div
           initial="hidden"
@@ -256,23 +248,6 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-8">
-        <div className="space-y-3">
-          <p className="text-sm font-semibold tracking-wide text-sage-700">Our Promise</p>
-          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Always fresh. Always clean.</h3>
-          <p className="text-neutral-700 leading-relaxed">
-            Great food starts with great growing. Every batch is nurtured with attention, integrity, and responsibility—
-            so what reaches your plate is produce we’re truly proud of.
-          </p>
-          <div className="flex flex-wrap gap-3 text-sm text-neutral-800">
-            {['Always Fresh', 'Always Clean', 'Always Grown with Heart'].map((item) => (
-              <span key={item} className="rounded-full bg-sage-50 px-3 py-1 border border-sage-100 font-semibold text-sage-800">
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className="space-y-3">
           <p className="text-sm font-semibold tracking-wide text-sage-700">Why Hydroponics?</p>
           <h3 className="text-2xl font-heading font-semibold text-neutral-900">Better for you. Better for our planet.</h3>
@@ -297,16 +272,6 @@ export default function HomePage() {
             Foliage isn’t just a business—it’s a passion project built with dedication, love, and belief in better food.
             Supporting a small business is supporting a dream. Thank you for helping something meaningful grow.
           </p>
-        </div>
-
-        <div className="space-y-4 rounded-3xl border border-neutral-200 bg-white/90 backdrop-blur p-8 shadow-sm">
-          <p className="text-sm font-semibold tracking-wide text-sage-700">Get Fresh Greens Easily</p>
-          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Simple. Fresh. Honest.</h3>
-          <ol className="space-y-2 text-neutral-700 leading-relaxed list-decimal list-inside">
-            <li>Explore our fresh produce.</li>
-            <li>Place your order.</li>
-            <li>Receive freshly harvested greens straight from our farm.</li>
-          </ol>
         </div>
       </section>
     </div>

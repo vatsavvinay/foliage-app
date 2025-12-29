@@ -23,8 +23,14 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className="container mx-auto py-12">
-      <h1 className="text-3xl font-bold mb-6">Browse Greens</h1>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+      <div className="space-y-2">
+        <p className="text-sm font-semibold tracking-wide text-sage-700">Browse Greens</p>
+        <h1 className="text-3xl font-heading font-semibold text-neutral-900">Fresh, clean, and ready to enjoy.</h1>
+        <p className="text-neutral-700 leading-relaxed">
+          Lettuce, basil, and spinach grown hydroponically with care—add them to your bag and taste the difference.
+        </p>
+      </div>
 
       {products.length === 0 ? (
         <p className="text-neutral-500">No products available yet.</p>

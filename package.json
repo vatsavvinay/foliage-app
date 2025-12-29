@@ -10,7 +10,8 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -21,6 +22,7 @@
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.18.2",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
     "next-auth": "^4.24.10",

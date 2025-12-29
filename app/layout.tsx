@@ -1,7 +1,24 @@
 import type { Metadata } from 'next';
+import { Playfair_Display, Montserrat } from 'next/font/google';
 import { Navbar } from '@/components/shared/Navbar';
 import { Footer } from '@/components/shared/Footer';
 import '@/app/globals.css';
+import { CartProvider } from '@/components/storefront/CartContext';
+import { CartDrawer } from '@/components/storefront/CartDrawer';
+
+const headingFont = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-heading',
+});
+
+const bodyFont = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+  weight: ['400', '500', '600'],
+});
 
 export const metadata: Metadata = {
   title: 'Foliage - Sustainable E-commerce',
@@ -17,11 +34,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-white text-neutral-900">
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+    <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
+      <body className="bg-white text-neutral-900 font-body antialiased">
+        <CartProvider>
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

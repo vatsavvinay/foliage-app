@@ -14,7 +14,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    'font-medium rounded-lg transition inline-flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2';
+    'font-medium rounded-lg transform-gpu transition-transform duration-150 ease-out inline-flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 hover:-translate-y-1 active:scale-95';
 
   const variants = {
     primary: 'bg-sage-600 text-white hover:bg-sage-700 focus:ring-sage-500',

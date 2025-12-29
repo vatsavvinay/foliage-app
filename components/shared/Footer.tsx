@@ -26,18 +26,13 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/products" className="hover:text-sage-400 transition">
-                  Products
-                </a>
-              </li>
-              <li>
                 <a href="/about" className="hover:text-sage-400 transition">
                   About
                 </a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-sage-400 transition">
-                  Contact
+                <a href="/products" className="hover:text-sage-400 transition">
+                  Browse Greens
                 </a>
               </li>
             </ul>

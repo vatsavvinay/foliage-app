@@ -4,11 +4,15 @@ import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from './CartContext';
 import { X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export function CartDrawer() {
   const { items, isOpen, closeDrawer, addToCart, removeFromCart, clearCart } = useCart();
+  const router = useRouter();
+  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
@@ -86,6 +90,38 @@ export function CartDrawer() {
       };
     }
   }, [isOpen, closeDrawer]);
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+    setCheckoutState('loading');
+    setCheckoutError(null);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
+        }),
+      });
+      if (res.status === 401) {
+        router.push('/auth/signin');
+        return;
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Checkout failed');
+      }
+      setCheckoutState('success');
+      clearCart();
+      closeDrawer();
+      router.push('/products');
+    } catch (err: any) {
+      setCheckoutState('error');
+      setCheckoutError(err.message || 'Checkout failed');
+    } finally {
+      setCheckoutState('idle');
+    }
+  };
 
   return (
     <div aria-hidden={!isOpen} className={`fixed inset-0 z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
@@ -186,12 +222,19 @@ export function CartDrawer() {
             <div className="text-neutral-600">Subtotal</div>
             <div className="font-semibold">{formatPrice(subtotal)}</div>
           </div>
+          {checkoutError && <p className="text-sm text-red-600 mb-2">{checkoutError}</p>}
 
           <div className="flex gap-2">
             <button className="flex-1 py-2 rounded bg-neutral-100" onClick={clearCart}>
               Empty Bag
             </button>
-            <button className="flex-1 py-2 rounded bg-sage-600 text-white">Go to Checkout</button>
+            <button
+              className="flex-1 py-2 rounded bg-sage-600 text-white disabled:opacity-60"
+              disabled={items.length === 0 || checkoutState === 'loading'}
+              onClick={handleCheckout}
+            >
+              {checkoutState === 'loading' ? 'Processing…' : 'Go to Checkout'}
+            </button>
           </div>
         </div>
       </motion.aside>

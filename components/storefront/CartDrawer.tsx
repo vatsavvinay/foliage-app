@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
-import { useCart } from './CartContext';
+import { useCart } from '@/hooks/use-cart';
 import { X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -84,7 +84,7 @@ export function CartDrawer() {
         // Restore focus
         try {
           previousActiveElement.current?.focus();
-        } catch (e) {
+        } catch {
           // ignore
         }
       };
@@ -115,9 +115,9 @@ export function CartDrawer() {
       clearCart();
       closeDrawer();
       router.push('/products');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setCheckoutState('error');
-      setCheckoutError(err.message || 'Checkout failed');
+      setCheckoutError((err as Error)?.message ?? 'Checkout failed');
     } finally {
       setCheckoutState('idle');
     }
@@ -153,17 +153,17 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-white shadow-2xl`}
+            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-white shadow-2xl border-l border-neutral-200`}
           >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 id="cart-title" className="text-lg font-semibold">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h3 id="cart-title" className="text-xl font-semibold">
             Your Cart
           </h3>
           <button
             ref={closeBtnRef}
             onClick={closeDrawer}
             aria-label="Close cart"
-            className="p-2 hover:bg-neutral-100 rounded-md"
+            className="p-2 hover:bg-neutral-100 rounded-full"
           >
             <X className="w-5 h-5" />
           </button>
@@ -174,7 +174,7 @@ export function CartDrawer() {
           {isOpen ? 'Cart opened' : 'Cart closed'}
         </div>
 
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto">
           {items.length === 0 && <p className="text-neutral-600">Your cart is empty.</p>}
 
           <ul className="space-y-4">
@@ -217,19 +217,19 @@ export function CartDrawer() {
           </ul>
         </div>
 
-        <div className="p-4 border-t">
-          <div className="flex items-center justify-between mb-4">
+        <div className="p-6 border-t space-y-4">
+          <div className="flex items-center justify-between">
             <div className="text-neutral-600">Subtotal</div>
             <div className="font-semibold">{formatPrice(subtotal)}</div>
           </div>
           {checkoutError && <p className="text-sm text-red-600 mb-2">{checkoutError}</p>}
 
           <div className="flex gap-2">
-            <button className="flex-1 py-2 rounded bg-neutral-100" onClick={clearCart}>
+            <button className="flex-1 py-2 rounded-lg bg-neutral-100 text-neutral-800" onClick={clearCart}>
               Empty Bag
             </button>
             <button
-              className="flex-1 py-2 rounded bg-sage-600 text-white disabled:opacity-60"
+              className="flex-1 py-2 rounded-lg bg-green-700 text-white disabled:opacity-60"
               disabled={items.length === 0 || checkoutState === 'loading'}
               onClick={handleCheckout}
             >

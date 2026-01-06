@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   if (!session?.user) redirect('/auth/signin');
 
   const orders = await prisma.order.findMany({
-    where: { userId: (session.user as any).id },
+    where: { userId: (session.user as { id: string }).id },
     orderBy: { createdAt: 'desc' },
     include: { items: { include: { product: true } } },
   });
@@ -20,7 +20,7 @@ export default async function ProfilePage() {
         <p className="text-sm font-semibold tracking-wide text-sage-700">Profile</p>
         <h1 className="text-3xl font-heading font-semibold text-neutral-900">Welcome back, {session.user.name || 'Friend'}.</h1>
         <p className="text-neutral-700">Email: {session.user.email}</p>
-        <p className="text-neutral-700">Role: {(session.user as any).role || 'customer'}</p>
+        <p className="text-neutral-700">Role: {(session.user as { role?: string }).role || 'customer'}</p>
       </div>
 
       <div className="space-y-3">
@@ -34,7 +34,7 @@ export default async function ProfilePage() {
                   <p className="text-sm text-neutral-500">Order ID: {order.id}</p>
                   <p className="text-neutral-800">Status: {order.status}</p>
                 </div>
-                <div className="font-semibold text-sage-700">{formatPrice(parseFloat(order.totalPrice.toString()))}</div>
+                <div className="font-semibold text-sage-700">{formatPrice(parseFloat(order.total.toString()))}</div>
               </div>
               <ul className="mt-3 space-y-2 text-sm text-neutral-700">
                 {order.items.map((item) => (

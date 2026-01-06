@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Heart, Leaf, Sprout, Trees, Earth } from 'lucide-react';
 
 export const metadata = {
-  title: 'About Us | Foliage Greens',
+  title: 'Meet Foliage | Foliage Greens',
   description: 'Learn how we grow fresher, cleaner hydroponic greens for our community.',
 };
 
@@ -21,7 +21,7 @@ export default function AboutPage() {
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <p className="text-sm font-semibold tracking-wide text-sage-700">About Us</p>
+        <p className="text-sm font-semibold tracking-wide text-sage-700">Meet Foliage</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold text-neutral-900 leading-tight font-heading">
           Fresh greens, grown with intention.
         </h1>

@@ -9,11 +9,11 @@ type Product = {
   id: string;
   name: string;
   slug: string;
-  description: string;
-  price: any;
+  description?: string | null;
+  price: number;
   image?: string | null;
   published: boolean;
-  categoryId: string;
+  categoryId: string | null;
 };
 
 type Category = {
@@ -64,8 +64,8 @@ export function ProductManager({
         published: true,
       });
       startTransition(() => router.refresh());
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error)?.message ?? String(err));
     } finally {
       setSaving(false);
     }

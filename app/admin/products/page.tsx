@@ -6,8 +6,8 @@ import { redirect } from 'next/navigation';
 
 export default async function AdminProductsPage() {
   const session = await getServerSession(authOptions);
-  const role = (session?.user as any)?.role ?? 'customer';
-  if (!session || role !== 'admin') {
+  const role = (session?.user as { role?: string })?.role ?? 'CUSTOMER';
+  if (!session || role !== 'ADMIN') {
     redirect('/auth/signin');
   }
 

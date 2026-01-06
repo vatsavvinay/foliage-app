@@ -27,13 +27,14 @@ export async function POST(request: Request) {
         name: name ?? null,
         email,
         password: hashed,
-        role: role ?? 'customer',
+        role: role === 'admin' ? 'ADMIN' : 'CUSTOMER',
       },
       select: { id: true, name: true, email: true, role: true },
     });
 
     return NextResponse.json({ user }, { status: 201 });
-  } catch (e) {
+  } catch (error) {
+    console.error('Register error:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
   }
 }

@@ -1,16 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
 import { signIn, getSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
 export default function SignInPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [callbackUrl, setCallbackUrl] = useState('/');
+
+  useEffect(() => {
+    const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    setCallbackUrl(sp?.get('callbackUrl') ?? '/');
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +25,6 @@ export default function SignInPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const callbackUrl = searchParams.get('callbackUrl') ?? '/';
     const res = await signIn('credentials', {
       redirect: false,
       email,
@@ -28,10 +34,10 @@ export default function SignInPage() {
     setLoading(false);
     if (res?.ok) {
       const session = await getSession();
-      const role = (session?.user as any)?.role;
+      const role = (session?.user as { role?: string })?.role;
       if (callbackUrl && callbackUrl !== '/') {
         router.push(callbackUrl);
-      } else if (role === 'admin') {
+      } else if (role === 'ADMIN') {
         router.push('/admin');
       } else {
         router.push('/');

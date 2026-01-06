@@ -6,8 +6,8 @@ import { slugify } from '@/lib/utils';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  const role = (session?.user as any)?.role ?? 'customer';
-  if (!session || role !== 'admin') {
+  const role = (session?.user as { role?: string })?.role ?? 'CUSTOMER';
+  if (!session || role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -21,8 +21,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  const role = (session?.user as any)?.role ?? 'customer';
-  if (!session || role !== 'admin') {
+  const role = (session?.user as { role?: string })?.role ?? 'CUSTOMER';
+  if (!session || role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       slug,
       description: description ?? '',
       price: numericPrice,
-      image: image ?? null,
+      imageUrl: image ?? null,
       categoryId,
       published: !!published,
     },

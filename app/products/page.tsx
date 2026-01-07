@@ -24,9 +24,9 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-6">
-      <div className="space-y-2">
-        <p className="text-sm font-semibold tracking-wide text-sage-700">Browse Greens</p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div className="sketch-panel p-7 sm:p-9 space-y-3">
+        <span className="sketch-tag">Browse Greens</span>
         <h1 className="text-3xl font-heading font-semibold text-neutral-900">Fresh, clean, and ready to enjoy.</h1>
         <p className="text-neutral-700 leading-relaxed">
           Lettuce, basil, and spinach grown hydroponically with care—add them to your bag and taste the difference.

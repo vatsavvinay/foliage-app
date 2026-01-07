@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Kalam, Nunito } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
@@ -7,7 +7,16 @@ import Navbar from "@/components/shared/Navbar";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
 import { Footer } from "@/components/shared/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const kalam = Kalam({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-heading",
+});
 
 export const metadata: Metadata = {
   title: "Foliage - Fresh Hydroponic Produce",
@@ -21,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${nunito.variable} ${kalam.variable}`}>
         <Providers>
           <Navbar />
           <CartDrawer />

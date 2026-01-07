@@ -153,17 +153,17 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-white shadow-2xl border-l border-neutral-200`}
+            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-[var(--paper-light)] shadow-2xl border-l-2 border-[var(--ink)]`}
           >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h3 id="cart-title" className="text-xl font-semibold">
+        <div className="flex items-center justify-between p-6 border-b-2 border-[var(--ink)]">
+          <h3 id="cart-title" className="text-xl font-heading font-semibold">
             Your Cart
           </h3>
           <button
             ref={closeBtnRef}
             onClick={closeDrawer}
             aria-label="Close cart"
-            className="p-2 hover:bg-neutral-100 rounded-full"
+            className="p-2 hover:bg-[var(--butter)] rounded-full border-2 border-[var(--ink)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -180,7 +180,7 @@ export function CartDrawer() {
           <ul className="space-y-4">
             {items.map((item) => (
               <li key={item.id} className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-md overflow-hidden bg-neutral-100 flex-shrink-0">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-[var(--paper)] flex-shrink-0 border-2 border-[var(--ink)]">
                   {item.image ? (
                     <Image src={item.image} alt={item.name} width={64} height={64} className="object-cover" />
                   ) : null}
@@ -188,15 +188,15 @@ export function CartDrawer() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-sm text-neutral-500">{formatPrice(item.price)}</div>
+                      <div className="font-heading font-semibold">{item.name}</div>
+                      <div className="text-sm text-neutral-600">{formatPrice(item.price)}</div>
                     </div>
                     <div className="text-sm text-neutral-700">{formatPrice(item.price * item.quantity)}</div>
                   </div>
 
                   <div className="mt-2 flex items-center gap-2">
                     <button
-                      className="px-2 py-1 bg-neutral-100 rounded"
+                      className="px-2 py-1 bg-[var(--paper)] rounded-full border-2 border-[var(--ink)]"
                       onClick={() => removeFromCart(item.id)}
                       aria-label={`Remove one ${item.name}`}
                     >
@@ -204,7 +204,7 @@ export function CartDrawer() {
                     </button>
                     <div className="text-sm" aria-live="polite">{item.quantity}</div>
                     <button
-                      className="px-2 py-1 bg-neutral-100 rounded"
+                      className="px-2 py-1 bg-[var(--paper)] rounded-full border-2 border-[var(--ink)]"
                       onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, image: item.image, slug: item.slug })}
                       aria-label={`Add one ${item.name}`}
                     >
@@ -217,7 +217,7 @@ export function CartDrawer() {
           </ul>
         </div>
 
-        <div className="p-6 border-t space-y-4">
+        <div className="p-6 border-t-2 border-[var(--ink)] space-y-4">
           <div className="flex items-center justify-between">
             <div className="text-neutral-600">Subtotal</div>
             <div className="font-semibold">{formatPrice(subtotal)}</div>
@@ -225,11 +225,11 @@ export function CartDrawer() {
           {checkoutError && <p className="text-sm text-red-600 mb-2">{checkoutError}</p>}
 
           <div className="flex gap-2">
-            <button className="flex-1 py-2 rounded-lg bg-neutral-100 text-neutral-800" onClick={clearCart}>
+            <button className="flex-1 py-2 rounded-full border-2 border-[var(--ink)] bg-[var(--paper)] text-neutral-800" onClick={clearCart}>
               Empty Bag
             </button>
             <button
-              className="flex-1 py-2 rounded-lg bg-green-700 text-white disabled:opacity-60"
+              className="flex-1 py-2 rounded-full border-2 border-[var(--ink)] bg-sage-700 text-white disabled:opacity-60"
               disabled={items.length === 0 || checkoutState === 'loading'}
               onClick={handleCheckout}
             >

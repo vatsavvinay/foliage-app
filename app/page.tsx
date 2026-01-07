@@ -59,81 +59,95 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <section className="relative overflow-hidden" id="home">
         <div className="absolute inset-0">
           <Image
-            src="/images/hydroponic-bg.jpg"
+            src="/images/hydroponic_sketch_bg.png"
             alt="Hydroponic greens"
             fill
             priority
-            className="object-cover"
+            className="object-cover opacity-55"
           />
-          <div className="absolute inset-0 bg-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f6f2eb]/90 via-[#f6f2eb]/80 to-[#f6f2eb]" />
         </div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="max-w-2xl text-white space-y-6">
-            <p className="text-sm font-semibold tracking-wide">Welcome to Foliage</p>
-            <h1 className="text-5xl sm:text-6xl font-heading font-semibold leading-tight">
-              Fresh Greens, <br /> Grown Smarter.
+        <div className="flex justify-end relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="sketch-panel max-w-2xl p-7 sm:p-10 space-y-6">
+            <span className="sketch-tag">Welcome to Foliage</span>
+            <h1 className="text-4xl sm:text-6xl font-heading font-semibold leading-tight text-neutral-900">
+              <span className="sketch-underline">Fresh Greens</span>, <br /> Grown Smarter.
             </h1>
-            <p className="text-lg text-white/90 leading-relaxed">
+            <p className="text-base sm:text-lg text-neutral-700 leading-relaxed">
               We grow lettuce, basil, and spinach the way they should be grown—fresh, clean, vibrant, and full of life.
               Hydroponically cultivated with precision and care, our greens are harvested at peak quality so they taste
               better, feel fresher, and nourish your family with confidence.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 rounded-full bg-green-500 px-6 py-3 text-white font-semibold shadow-md hover:bg-green-600 transition"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-[var(--ink)] bg-sage-700 px-6 py-3 text-white font-semibold shadow-[3px_3px_0_rgba(47,42,36,0.25)] hover:bg-sage-800 transition"
               >
                 Order Fresh Greens
               </Link>
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-white font-semibold hover:bg-white/10 transition"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-[var(--ink)] bg-[var(--paper)] px-6 py-3 text-neutral-900 font-semibold hover:bg-[var(--butter)] transition"
               >
                 Learn About Our Farm
               </Link>
+              <span className="hidden sm:inline-flex items-center text-sage-700">
+                <svg viewBox="0 0 120 40" className="w-16 h-6" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                  <path d="M2 20c18-8 32-8 50 0s32 8 52 0" />
+                  <path d="M96 10l14 10-14 10" />
+                </svg>
+              </span>
             </div>
           </div>
         </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-10" id="why-choose">
-        <div className="space-y-3">
-          <p className="text-sm font-semibold tracking-wide text-green-700">Why Choose Foliage</p>
-          <h2 className="text-3xl font-heading font-semibold text-neutral-900">{highlights.headline}</h2>
+        <div className="sketch-panel p-8 sm:p-10 space-y-4">
+          <span className="sketch-tag">Why Choose Foliage</span>
+          <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-neutral-900">
+            {highlights.headline}
+          </h2>
           <p className="text-neutral-700 leading-relaxed">{highlights.body}</p>
         </div>
 
-        <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
-          <p className="text-sm font-semibold tracking-wide text-green-700">What We Grow</p>
-          <h3 className="text-2xl font-heading font-semibold text-neutral-900 mt-2">Lettuce, Basil, Spinach.</h3>
-          <p className="text-neutral-700 leading-relaxed mt-3">{whatWeGrow}</p>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="sketch-card p-6 sm:p-7 space-y-3">
+            <p className="text-sm font-semibold tracking-wide text-sage-700">What We Grow</p>
+            <h3 className="text-2xl font-heading font-semibold text-neutral-900 mt-2">
+              Lettuce, Basil, Spinach.
+            </h3>
+            <p className="text-neutral-700 leading-relaxed mt-3">{whatWeGrow}</p>
+          </div>
 
-        <div className="space-y-3">
-          <p className="text-sm font-semibold tracking-wide text-green-700">Our Promise</p>
-          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Always fresh. Always clean.</h3>
-          <p className="text-neutral-700 leading-relaxed">
-            Great food starts with great growing. Every batch is nurtured with attention, integrity, and responsibility—
-            so what reaches your plate is produce we’re truly proud of.
-          </p>
+          <div className="sketch-card p-6 sm:p-7 space-y-3">
+            <p className="text-sm font-semibold tracking-wide text-sage-700">Our Promise</p>
+            <h3 className="text-2xl font-heading font-semibold text-neutral-900">Always fresh. Always clean.</h3>
+            <p className="text-neutral-700 leading-relaxed">
+              Great food starts with great growing. Every batch is nurtured with attention, integrity, and responsibility—
+              so what reaches your plate is produce we’re truly proud of.
+            </p>
+          </div>
         </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-        <div className="space-y-4" id="why-hydroponics">
-          <p className="text-sm font-semibold tracking-wide text-green-700">Why Hydroponics?</p>
-          <h3 className="text-2xl font-heading font-semibold text-neutral-900">Better for you. Better for our planet.</h3>
+        <div className="sketch-panel p-8 sm:p-10 space-y-4" id="why-hydroponics">
+          <span className="sketch-tag">Why Hydroponics?</span>
+          <h3 className="text-2xl sm:text-3xl font-heading font-semibold text-neutral-900">
+            Better for you. Better for our planet.
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-neutral-700 leading-relaxed">
-            <ul className="space-y-2">
+            <ul className="sketch-outline bg-[var(--paper-light)] p-5 space-y-2">
               {hydroponicsLeft.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <ul className="space-y-2">
+            <ul className="sketch-outline bg-[var(--paper-light)] p-5 space-y-2">
               {hydroponicsRight.map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -141,8 +155,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="space-y-3" id="meet-foliage">
-          <p className="text-sm font-semibold tracking-wide text-green-700">Meet Foliage</p>
+        <div className="sketch-card p-7 sm:p-8 space-y-3" id="meet-foliage">
+          <span className="sketch-tag">Meet Foliage</span>
           <h3 className="text-2xl font-heading font-semibold text-neutral-900">From our dream to your table.</h3>
           <p className="text-neutral-700 leading-relaxed">
             Foliage isn’t just a business—it’s a passion project built with dedication, love, and belief in better food.
@@ -150,8 +164,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm space-y-4">
-          <p className="text-sm font-semibold tracking-wide text-green-700">Get Fresh Greens Easily</p>
+        <div className="sketch-panel p-8 sm:p-9 space-y-4">
+          <span className="sketch-tag">Get Fresh Greens Easily</span>
           <h3 className="text-2xl font-heading font-semibold text-neutral-900">Simple. Fresh. Honest.</h3>
           <div className="space-y-2 text-neutral-700 leading-relaxed">
             {[
@@ -160,7 +174,7 @@ export default function HomePage() {
               "Receive freshly harvested greens straight from our farm.",
             ].map((step) => (
               <div key={step} className="flex items-start gap-2">
-                <Sprout className="w-4 h-4 text-green-700 mt-0.5" />
+                <Sprout className="w-4 h-4 text-sage-700 mt-0.5" />
                 <span>{step}</span>
               </div>
             ))}
@@ -176,7 +190,7 @@ export default function HomePage() {
             products.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden"
+                className="sketch-card overflow-hidden"
               >
                 <div className="relative h-56">
                   <Image
@@ -187,7 +201,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="p-6 space-y-3">
-                  <p className="text-xs font-semibold tracking-wide text-green-700">Hydroponic freshness</p>
+                  <span className="sketch-tag">Hydroponic freshness</span>
                   <h3 className="text-2xl font-heading font-semibold text-neutral-900">{product.name}</h3>
                   <p className="text-neutral-700 leading-relaxed">
                     {product.description ||
@@ -196,39 +210,39 @@ export default function HomePage() {
                   <div className="flex flex-wrap gap-2 text-sm">
                     {product.name.toLowerCase().includes("lettuce") && (
                       <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Zero pesticides
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           No washing required
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Stays crisp longer
                         </span>
                       </>
                     )}
                     {product.name.toLowerCase().includes("basil") && (
                       <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Greenhouse grown
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Hand-trimmed leaves
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Bold aroma
                         </span>
                       </>
                     )}
                     {product.name.toLowerCase().includes("spinach") && (
                       <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Tender baby leaves
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Ready to eat
                         </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
+                        <span className="sketch-outline bg-[var(--paper-light)] px-3 py-1 text-sage-800">
                           Naturally sweet
                         </span>
                       </>
@@ -236,7 +250,7 @@ export default function HomePage() {
                   </div>
                   <button
                     onClick={() => addItem(product.id)}
-                    className="inline-flex items-center gap-2 rounded-full bg-green-700 px-4 py-2 text-white font-semibold hover:bg-green-800 transition"
+                    className="inline-flex items-center gap-2 rounded-full border-2 border-[var(--ink)] bg-sage-700 px-4 py-2 text-white font-semibold shadow-[3px_3px_0_rgba(47,42,36,0.2)] hover:bg-sage-800 transition"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     Add to bag

@@ -28,7 +28,7 @@ export default function ProductCard({
   const { addItem } = useCart();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="sketch-card overflow-hidden transition-transform hover:-translate-y-1">
       <Link href={`/products/${slug}`}>
         <div className="relative h-48 w-full">
           <Image
@@ -40,31 +40,31 @@ export default function ProductCard({
         </div>
       </Link>
 
-      <div className="p-4">
+      <div className="p-4 space-y-3">
         <Link href={`/products/${slug}`}>
-          <h3 className="text-lg font-semibold text-gray-900 hover:text-green-600 mb-2">
+          <h3 className="text-lg font-heading font-semibold text-neutral-900 hover:text-sage-700 mb-2">
             {name}
           </h3>
         </Link>
 
         {description && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          <p className="text-sm text-neutral-700 mb-3 line-clamp-2">
             {description}
           </p>
         )}
 
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-green-600">
+          <span className="text-2xl font-semibold text-sage-700">
             {formatPrice(price)}
           </span>
 
           <button
             onClick={() => addItem(id)}
             disabled={stock === 0}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 border-[var(--ink)] font-semibold transition-colors ${
               stock === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-green-600 text-white hover:bg-green-700'
+                ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
+                : 'bg-sage-600 text-white hover:bg-sage-700'
             }`}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -73,7 +73,7 @@ export default function ProductCard({
         </div>
 
         {stock > 0 && stock < 10 && (
-          <p className="text-xs text-orange-600 mt-2">
+          <p className="text-xs text-amber-700 mt-2">
             Only {stock} left in stock
           </p>
         )}

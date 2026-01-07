@@ -31,13 +31,13 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-        <p className="text-gray-600 mb-8">
+        <h1 className="text-3xl font-heading font-semibold mb-4">Your cart is empty</h1>
+        <p className="text-neutral-700 mb-8">
           Add some products to get started!
         </p>
         <Link
           href="/products"
-          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+          className="inline-block border-2 border-[var(--ink)] bg-sage-700 text-white px-6 py-3 rounded-full hover:bg-sage-800 shadow-[3px_3px_0_rgba(47,42,36,0.2)]"
         >
           Browse Products
         </Link>
@@ -52,7 +52,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+      <h1 className="text-3xl font-heading font-semibold mb-8">Shopping Cart</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
@@ -60,22 +60,22 @@ export default function CartPage() {
           {items.map((item: CartItem) => (
             <div
               key={item.id}
-              className="flex gap-4 bg-white p-4 rounded-lg shadow"
+              className="sketch-card flex gap-4 p-4"
             >
               <div className="relative w-24 h-24 flex-shrink-0">
                 <Image
                   src={item.image || "/images/placeholder.png"}
                   alt={item.name}
                   fill
-                  className="object-cover rounded"
+                  className="object-cover rounded-xl"
                 />
               </div>
 
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-heading font-semibold text-lg">
                   {item.name}
                 </h3>
-                <p className="text-green-600 font-bold">
+                <p className="text-sage-700 font-semibold">
                   ${item.price.toFixed(2)}
                 </p>
 
@@ -85,7 +85,7 @@ export default function CartPage() {
                     onClick={() =>
                       updateQuantity(item.id, item.quantity - 1)
                     }
-                    className="p-1 rounded border hover:bg-gray-100"
+                    className="p-1 rounded-full border-2 border-[var(--ink)] hover:bg-[var(--butter)]"
                     disabled={isLoading}
                   >
                     <Minus className="w-4 h-4" />
@@ -95,7 +95,7 @@ export default function CartPage() {
                     onClick={() =>
                       updateQuantity(item.id, item.quantity + 1)
                     }
-                    className="p-1 rounded border hover:bg-gray-100"
+                    className="p-1 rounded-full border-2 border-[var(--ink)] hover:bg-[var(--butter)]"
                     disabled={
                       isLoading || (item.quantity >= ((item as CartItem).stock ?? 0))
                     }
@@ -112,7 +112,7 @@ export default function CartPage() {
               </div>
 
               <div className="flex flex-col items-end justify-between">
-                <p className="font-bold">
+                <p className="font-semibold">
                   ${(item.price * item.quantity).toFixed(2)}
                 </p>
                 <button
@@ -129,31 +129,31 @@ export default function CartPage() {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white p-6 rounded-lg shadow sticky top-4">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+          <div className="sketch-panel p-6 sticky top-4">
+            <h2 className="text-xl font-heading font-semibold mb-4">Order Summary</h2>
 
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal</span>
+                <span className="text-neutral-600">Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Tax</span>
+                <span className="text-neutral-600">Tax</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Shipping</span>
+                <span className="text-neutral-600">Shipping</span>
                 <span>{shipping === 0 ? "FREE" : `${shipping.toFixed(2)}`}</span>
               </div>
               {subtotal < 50 && (
-                <p className="text-sm text-green-600">
+                <p className="text-sm text-sage-700">
                   Add ${(50 - subtotal).toFixed(2)} more for free shipping!
                 </p>
               )}
             </div>
 
-            <div className="border-t pt-4 mb-6">
-              <div className="flex justify-between text-lg font-bold">
+            <div className="border-t-2 border-[var(--ink)] pt-4 mb-6">
+              <div className="flex justify-between text-lg font-semibold">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
@@ -161,14 +161,14 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="block w-full bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 font-semibold"
+              className="block w-full border-2 border-[var(--ink)] bg-sage-700 text-white text-center py-3 rounded-full hover:bg-sage-800 font-semibold shadow-[3px_3px_0_rgba(47,42,36,0.2)]"
             >
               Proceed to Checkout
             </Link>
 
             <Link
               href="/products"
-              className="block w-full text-center py-3 text-green-600 hover:text-green-700 font-semibold mt-2"
+              className="block w-full text-center py-3 text-sage-700 hover:text-sage-800 font-semibold mt-2"
             >
               Continue Shopping
             </Link>

@@ -13,7 +13,7 @@ interface ProductCardProps {
   description?: string;
   price: number;
   image?: string | null;
-  stock: number;
+  stock?: number;
 }
 
 export default function ProductCard({
@@ -72,7 +72,7 @@ export default function ProductCard({
           </button>
         </div>
 
-        {stock > 0 && stock < 10 && (
+        {stock !== undefined && stock > 0 && stock < 10 && (
           <p className="text-xs text-orange-600 mt-2">
             Only {stock} left in stock
           </p>

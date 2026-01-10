@@ -23,18 +23,18 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-neutral-400 text-sm">
               <li>
-                <Link href="/#home" className="hover:text-sage-400 transition">
+                <Link href="/" className="hover:text-sage-400 transition">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/#meet-foliage" className="hover:text-sage-400 transition">
-                  Meet Foliage
+                <Link href="/about" className="hover:text-sage-400 transition">
+                  About
                 </Link>
               </li>
               <li>
-                <Link href="/#browse-greens" className="hover:text-sage-400 transition">
-                  Browse Greens
+                <Link href="/products" className="hover:text-sage-400 transition">
+                  Products
                 </Link>
               </li>
             </ul>

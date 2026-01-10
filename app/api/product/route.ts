@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get("categoryId");
 
     const where: Record<string, unknown> = {
-      isActive: true,
+      published: true,
     };
 
     if (categoryId) {

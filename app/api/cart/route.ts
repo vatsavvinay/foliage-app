@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrCreateCart, addToCart } from "@/lib/cart-service";
 import { getCurrentUser } from "@/lib/auth-utils";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const addToCartSchema = z.object({
-  productId: z.string().cuid(),
+  productId: z.string().min(1),
   quantity: z.number().int().positive().default(1),
 });
 
@@ -32,8 +33,38 @@ export async function POST(request: NextRequest) {
     
     const validatedData = addToCartSchema.parse(body);
     
+    const cuidPattern = /^[cC][^\s-]{8,}$/;
+    let productId = validatedData.productId;
+
+    if (!cuidPattern.test(productId)) {
+      let product = await prisma.product.findUnique({
+        where: { slug: productId },
+        select: { id: true },
+      });
+
+      if (!product) {
+        product = await prisma.product.findFirst({
+          where: {
+            OR: [
+              { slug: { contains: productId, mode: "insensitive" } },
+              { name: { contains: productId, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true },
+        });
+      }
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
+      }
+      productId = product.id;
+    }
+
     const cartItem = await addToCart(
-      validatedData.productId,
+      productId,
       validatedData.quantity,
       user?.id
     );

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Heart, Leaf, Sprout, Trees, Earth } from 'lucide-react';
 
 export const metadata = {
-  title: 'Meet Foliage | Foliage Greens',
+  title: 'About | Foliage Greens',
   description: 'Learn how we grow fresher, cleaner hydroponic greens for our community.',
 };
 
@@ -11,7 +11,7 @@ export default function AboutPage() {
     <div className="relative overflow-hidden bg-gradient-to-b from-neutral-50 via-white to-neutral-50">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/hydroponic-bg.jpg"
+          src="/images/hydroponic_bg_hero.png"
           alt="Hydroponic rows of greens"
           fill
           className="object-cover opacity-20"
@@ -21,7 +21,7 @@ export default function AboutPage() {
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <p className="text-sm font-semibold tracking-wide text-sage-700">Meet Foliage</p>
+        <p className="text-sm font-semibold tracking-wide text-sage-700">About</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold text-neutral-900 leading-tight font-heading">
           Fresh greens, grown with intention.
         </h1>

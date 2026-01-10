@@ -27,14 +27,14 @@ export default function Navbar() {
           </Link>
 
           <div className="flex-1 flex items-center justify-center gap-8 text-neutral-800">
-            <Link href="/#home" className="hover:text-green-700">
+            <Link href="/" className="hover:text-green-700">
               Home
             </Link>
-            <Link href="/#meet-foliage" className="hover:text-green-700">
-              Meet Foliage
+            <Link href="/about" className="hover:text-green-700">
+              About
             </Link>
-            <Link href="/#browse-greens" className="hover:text-green-700">
-              Browse Greens
+            <Link href="/products" className="hover:text-green-700">
+              Products
             </Link>
             {session?.user?.role === "admin" && (
               <Link href="/admin" className="hover:text-green-700">

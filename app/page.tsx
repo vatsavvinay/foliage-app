@@ -63,7 +63,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden" id="home">
         <div className="absolute inset-0">
           <Image
-            src="/images/hydroponic-bg.jpg"
+            src="/images/hydroponic_bg_hero.png"
             alt="Hydroponic greens"
             fill
             priority

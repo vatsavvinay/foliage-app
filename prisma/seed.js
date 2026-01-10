@@ -53,48 +53,72 @@ async function main() {
   // Create sample products
   const spinach = await prisma.product.upsert({
     where: { slug: 'organic-spinach' },
-    update: {},
+    update: {
+      price: 1.5,
+      stock: 50,
+      categoryId: leafyGreens.id,
+      isActive: true,
+      published: true,
+      imageUrl: '/images/spinach.jpeg',
+    },
     create: {
       name: 'Organic Spinach',
       slug: 'organic-spinach',
       description: 'Fresh organic spinach leaves, perfect for salads and smoothies.',
-      price: 4.99,
+      price: 1.5,
       stock: 50,
       categoryId: leafyGreens.id,
       sku: 'SPH-001',
       isActive: true,
-      imageUrl: '/images/spinach.jpg',
+      published: true,
+      imageUrl: '/images/spinach.jpeg',
     },
   });
 
   const basil = await prisma.product.upsert({
     where: { slug: 'fresh-basil' },
-    update: {},
+    update: {
+      price: 1.5,
+      stock: 30,
+      categoryId: herbs.id,
+      isActive: true,
+      published: true,
+      imageUrl: '/images/basil.jpg',
+    },
     create: {
       name: 'Fresh Basil',
       slug: 'fresh-basil',
       description: 'Aromatic fresh basil, ideal for Italian dishes.',
-      price: 3.49,
+      price: 1.5,
       stock: 30,
       categoryId: herbs.id,
       sku: 'BSL-001',
       isActive: true,
+      published: true,
       imageUrl: '/images/basil.jpg',
     },
   });
 
   const lettuce = await prisma.product.upsert({
     where: { slug: 'butter-lettuce' },
-    update: {},
+    update: {
+      price: 1.5,
+      stock: 40,
+      categoryId: leafyGreens.id,
+      isActive: true,
+      published: true,
+      imageUrl: '/images/lettuce.jpg',
+    },
     create: {
       name: 'Butter Lettuce',
       slug: 'butter-lettuce',
       description: 'Tender butter lettuce with a mild, sweet flavor.',
-      price: 3.99,
+      price: 1.5,
       stock: 40,
       categoryId: leafyGreens.id,
       sku: 'LET-001',
       isActive: true,
+      published: true,
       imageUrl: '/images/lettuce.jpg',
     },
   });

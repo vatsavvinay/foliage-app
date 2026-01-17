@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 
 // In some hosted Postgres setups (e.g., PgBouncer transaction pooling), prepared statements can conflict.
 // Adding pgbouncer=true disables prepared statements for this client to avoid "prepared statement already exists".
@@ -11,89 +12,147 @@ const prisma = new PrismaClient({
 async function main() {
   console.log('Seeding database...');
 
-  // Remove obsolete demo products
-  try {
-    await prisma.product.deleteMany({
-      where: { slug: { in: ['snake-plant', 'terracotta-planter', 'succulent-mix'] } },
-    });
-  } catch (err) {
-    console.warn('Cleanup skip (could not delete old demo products):', err?.message || err);
-  }
+  // Create admin user
+  const adminEmail = 'admin@foliage.local';
+  const adminPassword = await bcrypt.hash('admin123', 12);
+  
+  const admin = await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      name: 'Admin User',
+      password: adminPassword,
+      role: 'ADMIN', // ✅ Changed from "admin" to "ADMIN"
+    },
+  });
 
-  // Create categories
-  const houseplants = await prisma.category.upsert({
-    where: { slug: 'houseplants' },
+  console.log('✅ Admin user created:', admin.email);
+
+  // Create sample categories
+  const leafyGreens = await prisma.category.upsert({
+    where: { slug: 'leafy-greens' },
     update: {},
     create: {
       name: 'Leafy Greens',
-      slug: 'houseplants',
-      description: 'Crisp, pesticide-free greens grown indoors year-round',
-      image: '/images/lettuce.jpg',
+      slug: 'leafy-greens',
     },
   });
 
-  const planters = await prisma.category.upsert({
-    where: { slug: 'planters' },
+  const herbs = await prisma.category.upsert({
+    where: { slug: 'herbs' },
     update: {},
     create: {
       name: 'Herbs',
-      slug: 'planters',
-      description: 'Aromatic herbs harvested at peak flavor',
-      image: '/images/basil.jpg',
+      slug: 'herbs',
     },
   });
 
+  console.log('✅ Categories created');
+
   // Create sample products
-  const products = [
-    {
-      name: 'Lettuce',
-      slug: 'lettuce',
-      description: 'Frilled, crunchy lettuce harvested daily for salads, wraps, and bowls.',
-      price: '1.50',
-      stock: 12,
-      image: '/images/lettuce.jpg',
-      images: ['/images/lettuce.jpg'],
-      categoryId: houseplants.id,
+  const spinach = await prisma.product.upsert({
+    where: { slug: 'organic-spinach' },
+    update: {
+      price: 1.5,
+      stock: 50,
+      categoryId: leafyGreens.id,
+      isActive: true,
       published: true,
+      imageUrl: '/images/spinach.jpeg',
     },
-    {
-      name: 'Basil',
-      slug: 'basil',
-      description: 'Sweet, aromatic basil perfect for pesto, pizza, and pasta.',
-      price: '1.50',
+    create: {
+      name: 'Organic Spinach',
+      slug: 'organic-spinach',
+      description: 'Fresh organic spinach leaves, perfect for salads and smoothies.',
+      price: 1.5,
+      stock: 50,
+      categoryId: leafyGreens.id,
+      sku: 'SPH-001',
+      isActive: true,
+      published: true,
+      imageUrl: '/images/spinach.jpeg',
+    },
+  });
+
+  const basil = await prisma.product.upsert({
+    where: { slug: 'fresh-basil' },
+    update: {
+      price: 1.5,
       stock: 30,
-      image: '/images/basil.jpg',
-      images: ['/images/basil.jpg'],
-      categoryId: planters.id,
+      categoryId: herbs.id,
+      isActive: true,
       published: true,
+      imageUrl: '/images/basil.jpg',
     },
-    {
-      name: 'Baby Spinach',
-      slug: 'baby-spinach',
-      description: 'Tender baby spinach leaves for smoothies, sautéing, or salads.',
-      price: '1.50',
-      stock: 20,
-      image: '/images/spinach.jpeg',
-      images: ['/images/spinach.jpeg'],
-      categoryId: houseplants.id,
+    create: {
+      name: 'Fresh Basil',
+      slug: 'fresh-basil',
+      description: 'Aromatic fresh basil, ideal for Italian dishes.',
+      price: 1.5,
+      stock: 30,
+      categoryId: herbs.id,
+      sku: 'BSL-001',
+      isActive: true,
       published: true,
+      imageUrl: '/images/basil.jpg',
     },
-  ];
+  });
 
-  for (const p of products) {
-    await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: p,
-      create: p,
-    });
-  }
+  const lettuce = await prisma.product.upsert({
+    where: { slug: 'butter-lettuce' },
+    update: {
+      price: 1.5,
+      stock: 40,
+      categoryId: leafyGreens.id,
+      isActive: true,
+      published: true,
+      imageUrl: '/images/lettuce.jpg',
+    },
+    create: {
+      name: 'Butter Lettuce',
+      slug: 'butter-lettuce',
+      description: 'Tender butter lettuce with a mild, sweet flavor.',
+      price: 1.5,
+      stock: 40,
+      categoryId: leafyGreens.id,
+      sku: 'LET-001',
+      isActive: true,
+      published: true,
+      imageUrl: '/images/lettuce.jpg',
+    },
+  });
 
-  console.log('Seeding finished.');
+  console.log('✅ Products created');
+
+  // Create a sample customer user
+  const customerPassword = await bcrypt.hash('customer123', 12);
+  
+  const customer = await prisma.user.upsert({
+    where: { email: 'customer@example.com' },
+    update: {},
+    create: {
+      email: 'customer@example.com',
+      name: 'Test Customer',
+      password: customerPassword,
+      role: 'CUSTOMER', // ✅ Changed from "customer" to "CUSTOMER"
+    },
+  });
+
+  console.log('✅ Customer user created:', customer.email);
+
+  console.log('\n🎉 Seeding completed successfully!\n');
+  console.log('📧 Admin credentials:');
+  console.log('   Email: admin@foliage.local');
+  console.log('   Password: admin123\n');
+  console.log('📧 Customer credentials:');
+  console.log('   Email: customer@example.com');
+  console.log('   Password: customer123\n');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('❌ Error seeding database:', e);
     process.exit(1);
   })
   .finally(async () => {

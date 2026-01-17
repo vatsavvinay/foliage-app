@@ -1,49 +1,82 @@
-'use client';
+"use client";
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
-import { useCart } from './CartContext';
+import { useCart } from '@/hooks/use-cart'; // ✅ Changed import path
 
 interface ProductCardProps {
   id: string;
   name: string;
-  price: number | string;
-  image?: string;
   slug: string;
+  description?: string;
+  price: number;
+  image?: string | null;
+  stock?: number;
 }
 
-export function ProductCard({ id, name, price, image, slug }: ProductCardProps) {
-  const { addToCart } = useCart();
+export default function ProductCard({
+  id,
+  name,
+  slug,
+  description,
+  price,
+  image,
+  stock,
+}: ProductCardProps) {
+  const { addItem } = useCart();
 
   return (
-    <div className="rounded-lg border border-neutral-200 overflow-hidden hover:shadow-lg hover:border-sage-300 transition group bg-white">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <Link href={`/products/${slug}`}>
-        <div className="relative w-full h-64 bg-neutral-100 overflow-hidden">
-          {image ? (
-            <Image src={image} alt={name} fill className="object-cover group-hover:scale-105 transition" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-neutral-400">No Image</div>
-          )}
+        <div className="relative h-48 w-full">
+          <Image
+            src={image || '/images/placeholder.png'}
+            alt={name}
+            fill
+            className="object-cover"
+          />
         </div>
       </Link>
-      <div className="p-4 space-y-3">
+
+      <div className="p-4">
         <Link href={`/products/${slug}`}>
-          <h3 className="font-semibold text-neutral-900 group-hover:text-sage-600 transition line-clamp-2">{name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 hover:text-green-600 mb-2">
+            {name}
+          </h3>
         </Link>
-        <p className="text-sage-600 font-bold">{formatPrice(price)}</p>
-        <button
-          type="button"
-          onClick={() => {
-            const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-            addToCart({ id, name, price: numPrice, image, slug });
-          }}
-          className="inline-flex items-center gap-2 rounded-full bg-sage-600 px-3 py-2 text-white text-sm font-semibold shadow-sm hover:bg-sage-700 transition"
-        >
-          <ShoppingBag className="w-4 h-4" />
-          Add to bag
-        </button>
+
+        {description && (
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+            {description}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between">
+          <span className="text-2xl font-bold text-green-600">
+            {formatPrice(price)}
+          </span>
+
+          <button
+            onClick={() => addItem(id)}
+            disabled={stock === 0}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-colors ${
+              stock === 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-green-600 text-white hover:bg-green-700'
+            }`}
+          >
+            <ShoppingBag className="w-4 h-4" />
+            {stock === 0 ? 'Out of Stock' : 'Add'}
+          </button>
+        </div>
+
+        {stock !== undefined && stock > 0 && stock < 10 && (
+          <p className="text-xs text-orange-600 mt-2">
+            Only {stock} left in stock
+          </p>
+        )}
       </div>
     </div>
   );

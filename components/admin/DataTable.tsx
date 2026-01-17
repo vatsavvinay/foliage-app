@@ -12,7 +12,7 @@ import {
 interface Column<T> {
   key: keyof T;
   label: string;
-  render?: (value: any, row: T) => React.ReactNode;
+  render?: (value: unknown, row: T) => React.ReactNode;
 }
 
 interface DataTableProps<T> {

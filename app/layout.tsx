@@ -1,31 +1,17 @@
-import type { Metadata } from 'next';
-import { Playfair_Display, Montserrat } from 'next/font/google';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
-import '@/app/globals.css';
-import { CartProvider } from '@/components/storefront/CartContext';
-import { CartDrawer } from '@/components/storefront/CartDrawer';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "sonner";
+import { Providers } from "./providers";
+import Navbar from "@/components/shared/Navbar";
+import { CartDrawer } from "@/components/storefront/CartDrawer";
+import { Footer } from "@/components/shared/Footer";
 
-const headingFont = Playfair_Display({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-heading',
-});
-
-const bodyFont = Montserrat({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
-  weight: ['400', '500', '600'],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Foliage - Sustainable E-commerce',
-  description: 'Discover eco-friendly products for sustainable living',
-  icons: {
-    icon: '🌿',
-  },
+  title: "Foliage - Fresh Hydroponic Produce",
+  description: "Premium hydroponic greens and herbs",
 };
 
 export default function RootLayout({
@@ -34,14 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${headingFont.variable} ${bodyFont.variable}`}>
-      <body className="bg-white text-neutral-900 font-body antialiased">
-        <CartProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <Providers>
           <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
           <CartDrawer />
-        </CartProvider>
+          <main>{children}</main>
+          <Footer />
+        </Providers>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

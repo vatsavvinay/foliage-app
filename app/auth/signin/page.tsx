@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
+import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -10,6 +12,12 @@ export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [callbackUrl, setCallbackUrl] = useState('/');
+
+  useEffect(() => {
+    const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    setCallbackUrl(sp?.get('callbackUrl') ?? '/');
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,10 +29,19 @@ export default function SignInPage() {
       redirect: false,
       email,
       password,
+      callbackUrl,
     });
     setLoading(false);
     if (res?.ok) {
-      router.push('/');
+      const session = await getSession();
+      const role = (session?.user as { role?: string })?.role;
+      if (callbackUrl && callbackUrl !== '/') {
+        router.push(callbackUrl);
+      } else if (role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } else {
       setError(res?.error ?? 'Invalid credentials');
     }

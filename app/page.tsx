@@ -42,6 +42,9 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const { addItem } = useCart();
 
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isFading, setIsFading] = useState(false);
+
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -59,6 +62,28 @@ export default function HomePage() {
   }, []);
 
   return (
+    <>
+    {showWelcome && (
+      <div
+        className={`fixed inset-0 z-50 bg-cover bg-center cursor-pointer transition-opacity duration-500 ${
+          isFading ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{ backgroundImage: 'url(/images/hydroponic_bg_hero.png)' }}
+        onClick={() => {
+          setIsFading(true);
+          setTimeout(() => setShowWelcome(false), 500);
+        }}
+      >
+        <div className="flex items-center justify-center h-full bg-black/50">
+          <div className="text-center text-white mx-auto px-4">
+            <h1 className="text-8xl font-bold mb-4 whitespace-nowrap">Welcome to Foliage</h1>
+            <p className="text-lg leading-relaxed">
+              Supporting a small business is supporting a DREAM.
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden" id="home">
         <div className="absolute inset-0">
@@ -248,5 +273,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+  </>
   );
 }

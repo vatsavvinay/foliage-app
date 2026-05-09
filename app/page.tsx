@@ -3,17 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ShoppingBag, Sprout } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  image: string | null;
-  description?: string;
-}
+import { Sprout } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const highlights = {
   title: "Why Choose Foliage",
@@ -38,61 +29,43 @@ const hydroponicsRight = [
 ];
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { addItem } = useCart();
-
   const [showWelcome, setShowWelcome] = useState(true);
-  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    // Check if welcome has been shown before
-    const hasSeenWelcome = localStorage.getItem('foliage_welcome_shown');
-    if (hasSeenWelcome) {
+    if (localStorage.getItem('foliage_welcome_shown')) {
       setShowWelcome(false);
     }
   }, []);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch("/api/product");
-        const data = await response.json();
-        setProducts(data.slice(0, 3));
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchProducts();
-  }, []);
+  const dismiss = () => {
+    localStorage.setItem('foliage_welcome_shown', 'true');
+    setShowWelcome(false);
+  };
 
   return (
     <>
-      {showWelcome && (
-      <div
-        className={`fixed inset-0 z-50 bg-cover bg-center cursor-pointer transition-opacity duration-500 ${
-          isFading ? 'opacity-0' : 'opacity-100'
-        }`}
-        style={{ backgroundImage: 'url(/images/hydroponic_bg_hero.png)' }}
-        onClick={() => {
-          setIsFading(true);
-          localStorage.setItem('foliage_welcome_shown', 'true');
-          setTimeout(() => setShowWelcome(false), 500);
-        }}
-      >
-        <div className="flex items-center justify-center h-full bg-black/50">
-          <div className="text-center text-white mx-auto px-4">
-            <h1 className="text-4xl sm:text-6xl font-bold mb-4">Welcome to Foliage</h1>
-            <p className="text-lg leading-relaxed">
-              Supporting a small business is supporting a DREAM.
-            </p>
-          </div>
-        </div>
-      </div>
-    )}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            key="welcome"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[60] bg-cover bg-center cursor-pointer"
+            style={{ backgroundImage: 'url(/images/hydroponic_bg_hero.png)' }}
+            onClick={dismiss}
+          >
+            <div className="flex items-center justify-center h-full bg-black/50">
+              <div className="text-center text-white mx-auto px-4">
+                <h1 className="text-4xl sm:text-6xl font-bold mb-4">Welcome to Foliage</h1>
+                <p className="text-lg leading-relaxed">
+                  Supporting a small business is supporting a DREAM.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden" id="home">
         <div className="absolute inset-0">
@@ -204,87 +177,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="browse-greens">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {isLoading ? (
-            <div className="text-neutral-600">Loading products…</div>
-          ) : (
-            products.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden"
-              >
-                  <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] md:aspect-[4/3]">
-                    <Image
-                      src={product.image || "/images/placeholder.png"}
-                      alt={product.name}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover"
-                    />
-                  </div>
-                <div className="p-4 sm:p-6 space-y-3">
-                  <p className="text-xs font-semibold tracking-wide text-green-700">Hydroponic freshness</p>
-                  <h3 className="text-lg sm:text-2xl font-heading font-semibold text-neutral-900">{product.name}</h3>
-                  <p className="text-neutral-700 leading-relaxed">
-                    {product.description ||
-                      "Crisp, clean, and harvested at peak freshness for everyday meals."}
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-sm">
-                    {product.name.toLowerCase().includes("lettuce") && (
-                      <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Zero pesticides
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          No washing required
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Stays crisp longer
-                        </span>
-                      </>
-                    )}
-                    {product.name.toLowerCase().includes("basil") && (
-                      <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Greenhouse grown
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Hand-trimmed leaves
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Bold aroma
-                        </span>
-                      </>
-                    )}
-                    {product.name.toLowerCase().includes("spinach") && (
-                      <>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Tender baby leaves
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Ready to eat
-                        </span>
-                        <span className="rounded-full border border-neutral-200 px-3 py-1 text-green-800">
-                          Naturally sweet
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => addItem(product.id)}
-                    className="inline-flex items-center gap-2 rounded-full bg-green-700 px-3 py-2 text-white font-semibold hover:bg-green-800 transition"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    Add to bag
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </section> */}
     </div>
   </>
   );

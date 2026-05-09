@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth-utils";
-import { getOrCreateCart, clearCart, getCartTotal } from "@/lib/cart-service";
+import { getOrCreateCart, clearCart } from "@/lib/cart-service";
+import { TAX_RATE, SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from "@/lib/constants";
 import { z } from "zod";
 
 const checkoutSchema = z.object({
@@ -23,87 +24,88 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     const body = await request.json();
-    
+
     const validatedData = checkoutSchema.parse(body);
-    
-    // Get cart
+
     const cart = await getOrCreateCart(user?.id);
-    
+
     if (cart.items.length === 0) {
+      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    // Validate stock for every item before touching the DB
+    const stockErrors: string[] = [];
+    for (const item of cart.items) {
+      if (item.product.stock < item.quantity) {
+        stockErrors.push(
+          `"${item.product.name}" only has ${item.product.stock} in stock (you requested ${item.quantity})`
+        );
+      }
+    }
+    if (stockErrors.length > 0) {
       return NextResponse.json(
-        { error: "Cart is empty" },
-        { status: 400 }
+        { error: "Some items are out of stock", details: stockErrors },
+        { status: 409 }
       );
     }
 
-    // Calculate totals
-    const totals = await getCartTotal(user?.id);
+    // Calculate totals server-side using live DB prices
+    const subtotal = cart.items.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+    const tax = subtotal * TAX_RATE;
+    const shippingCost = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const total = subtotal + tax + shippingCost;
 
-    // Create or get address
-    let address;
-    if (user) {
-      address = await prisma.address.create({
+    // Create address + order + decrement stock atomically
+    const order = await prisma.$transaction(async (tx) => {
+      const address = await tx.address.create({
         data: {
-          userId: user.id,
+          userId: user?.id ?? null,
           ...validatedData.shippingAddress,
         },
       });
-    } else {
-      // For guest checkout, create a temporary address record
-      address = await prisma.address.create({
+
+      const createdOrder = await tx.order.create({
         data: {
-          userId: "guest", // You'll need to handle this in your schema
-          ...validatedData.shippingAddress,
-        },
-      });
-    }
-
-    // Create order
-    const order = await prisma.order.create({
-      data: {
-        userId: user?.id,
-        guestEmail: !user ? validatedData.guestEmail : undefined,
-        addressId: address.id,
-        subtotal: totals.subtotal,
-        tax: totals.tax,
-        shippingCost: totals.shippingCost,
-        total: totals.total,
-        paymentMethod: validatedData.paymentMethod,
-        status: "PENDING",
-        paymentStatus: "PENDING",
-        items: {
-          create: cart.items.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.product.price,
-          })),
-        },
-
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
+          userId: user?.id,
+          guestEmail: !user ? validatedData.guestEmail : undefined,
+          addressId: address.id,
+          subtotal,
+          tax,
+          shippingCost,
+          total,
+          paymentMethod: validatedData.paymentMethod,
+          status: "PENDING",
+          paymentStatus: "PENDING",
+          items: {
+            create: cart.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              price: item.product.price,
+            })),
           },
         },
-        address: true,
-      },
+        include: {
+          items: { include: { product: true } },
+          address: true,
+        },
+      });
+
+      // Decrement stock for each product inside the same transaction
+      for (const item of cart.items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+
+      return createdOrder;
     });
 
-    // Update product stock
-    for (const item of cart.items) {
-      await prisma.product.update({
-        where: { id: item.productId },
-        data: {
-          stock: {
-            decrement: item.quantity,
-          },
-        },
-      });
-    }
-
-    // Clear cart
-    await clearCart(user?.id);
+    // Clear cart outside the transaction (non-critical if it fails)
+    await clearCart(user?.id).catch(() => {});
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
@@ -113,7 +115,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     console.error("Checkout error:", error);
     return NextResponse.json(
       { error: "Failed to process checkout" },

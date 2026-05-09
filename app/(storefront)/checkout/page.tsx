@@ -5,6 +5,22 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCart, CartItem } from "@/hooks/use-cart";
 import { toast } from "sonner";
+import { TAX_RATE, SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from "@/lib/constants";
+
+type CheckoutData = {
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    phone?: string;
+  };
+  paymentMethod: string;
+  guestEmail?: string;
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -65,8 +81,8 @@ export default function CheckoutPage() {
   }
 
   const subtotal = getTotal();
-  const tax = subtotal * 0.1;
-  const shipping = subtotal > 50 ? 0 : 10;
+  const tax = subtotal * TAX_RATE;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const total = subtotal + tax + shipping;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,21 +97,6 @@ export default function CheckoutPage() {
     setIsLoading(true);
 
     try {
-      type CheckoutData = {
-        shippingAddress: {
-          firstName: string;
-          lastName: string;
-          street: string;
-          city: string;
-          state: string;
-          zipCode: string;
-          country: string;
-          phone?: string;
-        };
-        paymentMethod: string;
-        guestEmail?: string;
-      };
-
       const checkoutData: CheckoutData = {
         shippingAddress: {
           firstName: formData.firstName,

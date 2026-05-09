@@ -1,6 +1,7 @@
 import { prisma } from "./prisma";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
+import { TAX_RATE, SHIPPING_COST, FREE_SHIPPING_THRESHOLD } from "./constants";
 
 export async function getOrCreateCart(userId?: string) {
   if (userId) {
@@ -238,11 +239,13 @@ export async function getCartTotal(userId?: string) {
     return sum + (item.product.price * item.quantity);
   }, 0);
 
+  const tax = total * TAX_RATE;
+  const shippingCost = total > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   return {
     subtotal: total,
-    tax: total * 0.1, // 10% tax - adjust as needed
-    shippingCost: total > 50 ? 0 : 10, // Free shipping over $50
-    total: total + (total * 0.1) + (total > 50 ? 0 : 10),
+    tax,
+    shippingCost,
+    total: total + tax + shippingCost,
     itemCount: cart.items.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0),
   };
 }

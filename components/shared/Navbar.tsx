@@ -39,7 +39,7 @@ export default function Navbar() {
             <Link href="/products" className="hover:text-green-700">
               Products
             </Link>
-            {session?.user?.role === "admin" && (
+            {session?.user?.role === "ADMIN" && (
               <Link href="/admin" className="hover:text-green-700">
                 Admin
               </Link>
@@ -86,7 +86,7 @@ export default function Navbar() {
             <Link href="/" className="block px-3 py-2 rounded-md hover:bg-neutral-50" onClick={() => setMobileOpen(false)}>Home</Link>
             <Link href="/about" className="block px-3 py-2 rounded-md hover:bg-neutral-50" onClick={() => setMobileOpen(false)}>About</Link>
             <Link href="/products" className="block px-3 py-2 rounded-md hover:bg-neutral-50" onClick={() => setMobileOpen(false)}>Products</Link>
-            {session?.user?.role === "admin" && (
+            {session?.user?.role === "ADMIN" && (
               <Link href="/admin" className="block px-3 py-2 rounded-md hover:bg-neutral-50" onClick={() => setMobileOpen(false)}>Admin</Link>
             )}
 

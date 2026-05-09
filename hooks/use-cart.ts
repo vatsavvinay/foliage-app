@@ -41,7 +41,24 @@ export interface CartStore extends CartState {
   getItemCount: () => number;
 }
 
-function mapServerItemToCartItem(item: any): CartItem {
+interface ServerCartItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  name?: string;
+  price?: number;
+  image?: string | null;
+  slug?: string | null;
+  product?: {
+    name: string;
+    price: number;
+    imageUrl?: string | null;
+    slug?: string | null;
+    stock?: number;
+  };
+}
+
+function mapServerItemToCartItem(item: ServerCartItem): CartItem {
   return {
     id: item.id,
     productId: item.productId,
@@ -49,7 +66,9 @@ function mapServerItemToCartItem(item: any): CartItem {
     price: item.product?.price ?? item.price ?? 0,
     image: item.product?.imageUrl ?? item.image ?? null,
     slug: item.product?.slug ?? item.slug ?? null,
-    quantity: item.quantity,    stock: item.product?.stock ?? undefined,  };
+    quantity: item.quantity,
+    stock: item.product?.stock ?? undefined,
+  };
 }
 
 export const useCart = create<CartStore>((set, get) => ({

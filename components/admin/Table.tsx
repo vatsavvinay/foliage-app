@@ -39,7 +39,7 @@ interface TableHeadProps {
 }
 
 export function TableHead({ children }: TableHeadProps) {
-  return <th className="px-6 py-4 font-semibold text-neutral-900">{children}</th>;
+  return <th className="px-4 py-3 sm:px-6 sm:py-4 font-semibold text-neutral-900">{children}</th>;
 }
 
 interface TableCellProps {
@@ -50,7 +50,7 @@ interface TableCellProps {
 
 export function TableCell({ children, colSpan, className = '' }: TableCellProps) {
   return (
-    <td className={`px-6 py-4 text-neutral-700 ${className}`} colSpan={colSpan}>
+    <td className={`px-4 py-3 sm:px-6 sm:py-4 text-neutral-700 ${className}`} colSpan={colSpan}>
       {children}
     </td>
   );

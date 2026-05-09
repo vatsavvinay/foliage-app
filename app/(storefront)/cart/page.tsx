@@ -22,7 +22,7 @@ export default function CartPage() {
 
   if (isLoading && items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-center">
         <p>Loading cart...</p>
       </div>
     );
@@ -30,14 +30,14 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-        <p className="text-gray-600 mb-8">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4">Your cart is empty</h1>
+        <p className="text-gray-600 mb-6">
           Add some products to get started!
         </p>
         <Link
           href="/products"
-          className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+          className="inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         >
           Browse Products
         </Link>
@@ -51,8 +51,8 @@ export default function CartPage() {
   const total = subtotal + tax + shipping;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-8">Shopping Cart</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
@@ -60,14 +60,16 @@ export default function CartPage() {
           {items.map((item: CartItem) => (
             <div
               key={item.id}
-              className="flex gap-4 bg-white p-4 rounded-lg shadow"
+              className="flex flex-col sm:flex-row gap-4 bg-white p-3 sm:p-4 rounded-lg shadow items-start sm:items-center"
             >
-              <div className="relative w-24 h-24 flex-shrink-0">
+              <div className="relative w-20 sm:w-24 aspect-square flex-shrink-0 overflow-hidden rounded bg-neutral-100">
                 <Image
                   src={item.image || "/images/placeholder.png"}
                   alt={item.name}
                   fill
-                  className="object-cover rounded"
+                  loading="lazy"
+                  sizes="96px"
+                  className="object-cover"
                 />
               </div>
 
@@ -111,7 +113,7 @@ export default function CartPage() {
                 )}
               </div>
 
-              <div className="flex flex-col items-end justify-between">
+              <div className="flex items-center gap-3 sm:flex-col sm:items-end">
                 <p className="font-bold">
                   ${(item.price * item.quantity).toFixed(2)}
                 </p>
@@ -129,7 +131,7 @@ export default function CartPage() {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white p-6 rounded-lg shadow sticky top-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow lg:sticky lg:top-4">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
             <div className="space-y-2 mb-4">

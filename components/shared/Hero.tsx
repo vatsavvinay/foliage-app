@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export function Hero() {
   return (
-    <section className="min-h-[600px] bg-gradient-to-br from-sage-50 via-white to-cream-50 relative overflow-hidden">
+    <section className="min-h-[420px] md:min-h-[600px] bg-gradient-to-br from-sage-50 via-white to-cream-50 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-sage-100 rounded-full opacity-50"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cream-100 rounded-full opacity-50"></div>
+        <div className="absolute -top-32 -right-32 w-56 h-56 sm:w-80 sm:h-80 bg-sage-100 rounded-full opacity-50"></div>
+        <div className="absolute -bottom-32 -left-32 w-56 h-56 sm:w-80 sm:h-80 bg-cream-100 rounded-full opacity-50"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">

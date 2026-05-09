@@ -14,25 +14,27 @@ export default function AboutPage() {
           src="/images/hydroponic_bg_hero.png"
           alt="Hydroponic rows of greens"
           fill
+          quality={75}
+          sizes="100vw"
           className="object-cover opacity-20"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/85 to-white" />
       </div>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 sm:pb-12">
         <p className="text-sm font-semibold tracking-wide text-sage-700">About</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold text-neutral-900 leading-tight font-heading">
+        <h1 className="mt-3 text-2xl sm:text-4xl font-extrabold text-neutral-900 leading-tight font-heading">
           Fresh greens, grown with intention.
         </h1>
-        <p className="mt-4 text-lg text-neutral-700 max-w-3xl">
+        <p className="mt-4 text-base text-neutral-700 max-w-3xl">
           We’re a small urban farm dedicated to lettuce, basil, and baby spinach—grown hydroponically for consistency,
           cleanliness, and peak flavor all year long.
         </p>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 pb-12">
-        <div className="rounded-3xl border border-neutral-200 bg-white/80 backdrop-blur p-8 shadow-sm">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-6 pb-10">
+        <div className="rounded-3xl border border-neutral-200 bg-white/80 backdrop-blur p-6 shadow-sm">
           <p className="text-sm font-semibold tracking-wide text-sage-700">Mission</p>
           <h2 className="mt-2 text-2xl font-bold text-neutral-900 font-heading">Grow fresher, cleaner greens close to home.</h2>
           <p className="mt-4 text-neutral-700 leading-relaxed" style={{ lineHeight: 1.6 }}>
@@ -50,7 +52,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-neutral-200 bg-white/80 backdrop-blur p-8 shadow-sm">
+        <div className="rounded-3xl border border-neutral-200 bg-white/80 backdrop-blur p-6 shadow-sm">
           <p className="text-sm font-semibold tracking-wide text-sage-700">Vision</p>
           <h2 className="mt-2 text-2xl font-bold text-neutral-900 font-heading">A future built on local freshness.</h2>
           <p className="mt-4 text-neutral-700 leading-relaxed" style={{ lineHeight: 1.6 }}>
@@ -81,10 +83,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="rounded-3xl border border-neutral-200 bg-white/90 backdrop-blur p-8 shadow-sm">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="rounded-3xl border border-neutral-200 bg-white/90 backdrop-blur p-6 shadow-sm">
           <p className="text-sm font-semibold tracking-wide text-sage-700">Values</p>
-          <h2 className="mt-2 text-2xl font-bold text-neutral-900 font-heading">What guides us</h2>
+          <h2 className="mt-2 text-2xl sm:text-2xl font-bold text-neutral-900 font-heading">What guides us</h2>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -111,12 +113,11 @@ export default function AboutPage() {
                 title: 'Heart in Every Leaf',
                 body: 'Every seed represents passion and hope; supporting us supports a dream.',
                 icon: Heart,
-              },
-            ].map((val) => (
-              <div key={val.title} className="rounded-2xl border border-neutral-100 bg-white/80 p-5 shadow-xs flex flex-col gap-2">
+              }].map((val) => (
+              <div key={val.title} className="rounded-2xl border border-neutral-100 bg-white/80 p-4 shadow-xs flex flex-col gap-2">
                 <div className="inline-flex items-center gap-2 text-sage-700">
-                  {val.icon ? <val.icon className="w-5 h-5" /> : null}
-                  <h3 className="font-semibold text-neutral-900">{val.title}</h3>
+                  {val.icon ? <val.icon className="w-4 h-4" /> : null}
+                  <h3 className="font-semibold text-neutral-900 text-sm">{val.title}</h3>
                 </div>
                 <p className="mt-2 text-neutral-700 text-sm leading-relaxed">{val.body}</p>
               </div>

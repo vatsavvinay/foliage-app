@@ -46,6 +46,14 @@ export default function HomePage() {
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
+    // Check if welcome has been shown before
+    const hasSeenWelcome = localStorage.getItem('foliage_welcome_shown');
+    if (hasSeenWelcome) {
+      setShowWelcome(false);
+    }
+  }, []);
+
+  useEffect(() => {
     async function fetchProducts() {
       try {
         const response = await fetch("/api/product");
@@ -63,7 +71,7 @@ export default function HomePage() {
 
   return (
     <>
-    {showWelcome && (
+      {showWelcome && (
       <div
         className={`fixed inset-0 z-50 bg-cover bg-center cursor-pointer transition-opacity duration-500 ${
           isFading ? 'opacity-0' : 'opacity-100'
@@ -71,12 +79,13 @@ export default function HomePage() {
         style={{ backgroundImage: 'url(/images/hydroponic_bg_hero.png)' }}
         onClick={() => {
           setIsFading(true);
+          localStorage.setItem('foliage_welcome_shown', 'true');
           setTimeout(() => setShowWelcome(false), 500);
         }}
       >
         <div className="flex items-center justify-center h-full bg-black/50">
           <div className="text-center text-white mx-auto px-4">
-            <h1 className="text-8xl font-bold mb-4 whitespace-nowrap">Welcome to Foliage</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold mb-4">Welcome to Foliage</h1>
             <p className="text-lg leading-relaxed">
               Supporting a small business is supporting a DREAM.
             </p>
@@ -92,6 +101,8 @@ export default function HomePage() {
             alt="Hydroponic greens"
             fill
             priority
+            quality={75}
+            sizes="100vw"
             className="object-cover"
           />
           <div className="absolute inset-0 bg-black/45" />
@@ -99,7 +110,7 @@ export default function HomePage() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="max-w-2xl text-white space-y-6">
             <p className="text-sm font-semibold tracking-wide">Welcome to Foliage</p>
-            <h1 className="text-5xl sm:text-6xl font-heading font-semibold leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-heading font-semibold leading-tight">
               Fresh Greens, <br /> Grown Smarter.
             </h1>
             <p className="text-lg text-white/90 leading-relaxed">
@@ -193,7 +204,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="browse-greens">
+      {/* <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="browse-greens">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {isLoading ? (
             <div className="text-neutral-600">Loading products…</div>
@@ -203,17 +214,19 @@ export default function HomePage() {
                 key={product.id}
                 className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden"
               >
-                <div className="relative h-56">
-                  <Image
-                    src={product.image || "/images/placeholder.png"}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6 space-y-3">
+                  <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] md:aspect-[4/3]">
+                    <Image
+                      src={product.image || "/images/placeholder.png"}
+                      alt={product.name}
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                <div className="p-4 sm:p-6 space-y-3">
                   <p className="text-xs font-semibold tracking-wide text-green-700">Hydroponic freshness</p>
-                  <h3 className="text-2xl font-heading font-semibold text-neutral-900">{product.name}</h3>
+                  <h3 className="text-lg sm:text-2xl font-heading font-semibold text-neutral-900">{product.name}</h3>
                   <p className="text-neutral-700 leading-relaxed">
                     {product.description ||
                       "Crisp, clean, and harvested at peak freshness for everyday meals."}
@@ -261,7 +274,7 @@ export default function HomePage() {
                   </div>
                   <button
                     onClick={() => addItem(product.id)}
-                    className="inline-flex items-center gap-2 rounded-full bg-green-700 px-4 py-2 text-white font-semibold hover:bg-green-800 transition"
+                    className="inline-flex items-center gap-2 rounded-full bg-green-700 px-3 py-2 text-white font-semibold hover:bg-green-800 transition"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     Add to bag
@@ -271,7 +284,7 @@ export default function HomePage() {
             ))
           )}
         </div>
-      </section>
+      </section> */}
     </div>
   </>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Only used for error toasts; UI components handle success feedback
 
 // Flattened cart item shape used across UI components
 export interface CartItem {
@@ -85,7 +85,6 @@ export const useCart = create<CartStore>((set, get) => ({
       if (!response.ok) throw new Error("Failed to add item");
 
       await get().fetchCart();
-      toast.success("Item added to cart");
     } catch (error) {
       set({ error: "Failed to add item", isLoading: false });
       toast.error("Failed to add item to cart");
@@ -120,7 +119,6 @@ export const useCart = create<CartStore>((set, get) => ({
       if (!response.ok) throw new Error("Failed to remove item");
 
       await get().fetchCart();
-      toast.success("Item removed from cart");
     } catch (error) {
       set({ error: "Failed to remove item", isLoading: false });
       toast.error("Failed to remove item");
@@ -137,7 +135,6 @@ export const useCart = create<CartStore>((set, get) => ({
       if (!response.ok) throw new Error("Failed to clear cart");
 
       set({ items: [], isLoading: false });
-      toast.success("Cart cleared");
     } catch (error) {
       set({ error: "Failed to clear cart", isLoading: false });
       toast.error("Failed to clear cart");

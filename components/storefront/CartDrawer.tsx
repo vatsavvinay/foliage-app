@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart';
+import { showToast } from '@/components/ui/Toast';
 import { X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -104,6 +105,7 @@ export function CartDrawer() {
         }),
       });
       if (res.status === 401) {
+        showToast.warning('Please sign in to checkout');
         router.push('/auth/signin');
         return;
       }
@@ -114,10 +116,15 @@ export function CartDrawer() {
       setCheckoutState('success');
       clearCart();
       closeDrawer();
+      showToast.success('Order placed successfully!', {
+        description: 'Redirecting to products...'
+      });
       router.push('/products');
     } catch (err: unknown) {
       setCheckoutState('error');
-      setCheckoutError((err as Error)?.message ?? 'Checkout failed');
+      const errorMessage = (err as Error)?.message ?? 'Checkout failed';
+      setCheckoutError(errorMessage);
+      showToast.error(errorMessage);
     } finally {
       setCheckoutState('idle');
     }
@@ -180,9 +187,9 @@ export function CartDrawer() {
           <ul className="space-y-4">
             {items.map((item) => (
               <li key={item.id} className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-md overflow-hidden bg-neutral-100 flex-shrink-0">
+                <div className="relative w-16 aspect-square rounded-md overflow-hidden bg-neutral-100 flex-shrink-0">
                   {item.image ? (
-                    <Image src={item.image} alt={item.name} width={64} height={64} className="object-cover" />
+                    <Image src={item.image} alt={item.name} fill loading="lazy" sizes="64px" className="object-cover" />
                   ) : null}
                 </div>
                 <div className="flex-1">

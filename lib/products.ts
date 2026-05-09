@@ -9,27 +9,27 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    id: 'spinach',
+    id: 'organic-spinach',
     name: 'Fresh Spinach',
     price: 1.5,
-    image: '/images/spinach.jpg',
-    slug: 'spinach',
+    image: '/images/spinach.jpeg',
+    slug: 'organic-spinach',
     description: 'Tender leafy spinach—great for salads and smoothies.',
   },
   {
-    id: 'basil',
+    id: 'fresh-basil',
     name: 'Organic Basil',
     price: 1.5,
     image: '/images/basil.jpg',
-    slug: 'basil',
+    slug: 'fresh-basil',
     description: 'Aromatic basil perfect for pesto and garnishes.',
   },
   {
-    id: 'lettuce',
+    id: 'butter-lettuce',
     name: 'Crisp Lettuce',
     price: 1.5,
     image: '/images/lettuce.jpg',
-    slug: 'lettuce',
+    slug: 'butter-lettuce',
     description: 'Crisp, fresh lettuce heads grown hydroponically.',
   },
 ];

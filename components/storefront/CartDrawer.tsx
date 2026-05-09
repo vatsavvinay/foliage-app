@@ -2,13 +2,18 @@
 
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
-import { useCart } from './CartContext';
+import { useCart } from '@/hooks/use-cart';
+import { showToast } from '@/components/ui/Toast';
 import { X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export function CartDrawer() {
   const { items, isOpen, closeDrawer, addToCart, removeFromCart, clearCart } = useCart();
+  const router = useRouter();
+  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
@@ -80,12 +85,50 @@ export function CartDrawer() {
         // Restore focus
         try {
           previousActiveElement.current?.focus();
-        } catch (e) {
+        } catch {
           // ignore
         }
       };
     }
   }, [isOpen, closeDrawer]);
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+    setCheckoutState('loading');
+    setCheckoutError(null);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
+        }),
+      });
+      if (res.status === 401) {
+        showToast.warning('Please sign in to checkout');
+        router.push('/auth/signin');
+        return;
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Checkout failed');
+      }
+      setCheckoutState('success');
+      clearCart();
+      closeDrawer();
+      showToast.success('Order placed successfully!', {
+        description: 'Redirecting to products...'
+      });
+      router.push('/products');
+    } catch (err: unknown) {
+      setCheckoutState('error');
+      const errorMessage = (err as Error)?.message ?? 'Checkout failed';
+      setCheckoutError(errorMessage);
+      showToast.error(errorMessage);
+    } finally {
+      setCheckoutState('idle');
+    }
+  };
 
   return (
     <div aria-hidden={!isOpen} className={`fixed inset-0 z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
@@ -117,17 +160,17 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-white shadow-2xl`}
+            className={`fixed right-0 top-0 h-full w-full max-w-md md:max-w-lg bg-white shadow-2xl border-l border-neutral-200`}
           >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 id="cart-title" className="text-lg font-semibold">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h3 id="cart-title" className="text-xl font-semibold">
             Your Cart
           </h3>
           <button
             ref={closeBtnRef}
             onClick={closeDrawer}
             aria-label="Close cart"
-            className="p-2 hover:bg-neutral-100 rounded-md"
+            className="p-2 hover:bg-neutral-100 rounded-full"
           >
             <X className="w-5 h-5" />
           </button>
@@ -138,15 +181,15 @@ export function CartDrawer() {
           {isOpen ? 'Cart opened' : 'Cart closed'}
         </div>
 
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto">
           {items.length === 0 && <p className="text-neutral-600">Your cart is empty.</p>}
 
           <ul className="space-y-4">
             {items.map((item) => (
               <li key={item.id} className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-md overflow-hidden bg-neutral-100 flex-shrink-0">
+                <div className="relative w-16 aspect-square rounded-md overflow-hidden bg-neutral-100 flex-shrink-0">
                   {item.image ? (
-                    <Image src={item.image} alt={item.name} width={64} height={64} className="object-cover" />
+                    <Image src={item.image} alt={item.name} fill loading="lazy" sizes="64px" className="object-cover" />
                   ) : null}
                 </div>
                 <div className="flex-1">
@@ -181,17 +224,24 @@ export function CartDrawer() {
           </ul>
         </div>
 
-        <div className="p-4 border-t">
-          <div className="flex items-center justify-between mb-4">
+        <div className="p-6 border-t space-y-4">
+          <div className="flex items-center justify-between">
             <div className="text-neutral-600">Subtotal</div>
             <div className="font-semibold">{formatPrice(subtotal)}</div>
           </div>
+          {checkoutError && <p className="text-sm text-red-600 mb-2">{checkoutError}</p>}
 
           <div className="flex gap-2">
-            <button className="flex-1 py-2 rounded bg-neutral-100" onClick={clearCart}>
+            <button className="flex-1 py-2 rounded-lg bg-neutral-100 text-neutral-800" onClick={clearCart}>
               Empty Bag
             </button>
-            <button className="flex-1 py-2 rounded bg-sage-600 text-white">Go to Checkout</button>
+            <button
+              className="flex-1 py-2 rounded-lg bg-green-700 text-white disabled:opacity-60"
+              disabled={items.length === 0 || checkoutState === 'loading'}
+              onClick={handleCheckout}
+            >
+              {checkoutState === 'loading' ? 'Processing…' : 'Go to Checkout'}
+            </button>
           </div>
         </div>
       </motion.aside>

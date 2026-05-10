@@ -3,17 +3,14 @@
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart';
-import { showToast } from '@/components/ui/Toast';
 import { X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 export function CartDrawer() {
   const { items, isOpen, closeDrawer, addToCart, removeFromCart, clearCart } = useCart();
   const router = useRouter();
-  const [checkoutState, setCheckoutState] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
@@ -92,42 +89,10 @@ export function CartDrawer() {
     }
   }, [isOpen, closeDrawer]);
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (items.length === 0) return;
-    setCheckoutState('loading');
-    setCheckoutError(null);
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: items.map((i) => ({ id: i.id, quantity: i.quantity })),
-        }),
-      });
-      if (res.status === 401) {
-        showToast.warning('Please sign in to checkout');
-        router.push('/auth/signin');
-        return;
-      }
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Checkout failed');
-      }
-      setCheckoutState('success');
-      clearCart();
-      closeDrawer();
-      showToast.success('Order placed successfully!', {
-        description: 'Redirecting to products...'
-      });
-      router.push('/products');
-    } catch (err: unknown) {
-      setCheckoutState('error');
-      const errorMessage = (err as Error)?.message ?? 'Checkout failed';
-      setCheckoutError(errorMessage);
-      showToast.error(errorMessage);
-    } finally {
-      setCheckoutState('idle');
-    }
+    closeDrawer();
+    router.push('/checkout');
   };
 
   return (
@@ -229,18 +194,16 @@ export function CartDrawer() {
             <div className="text-neutral-600">Subtotal</div>
             <div className="font-semibold">{formatPrice(subtotal)}</div>
           </div>
-          {checkoutError && <p className="text-sm text-red-600 mb-2">{checkoutError}</p>}
-
           <div className="flex gap-2">
             <button className="flex-1 py-2 rounded-lg bg-neutral-100 text-neutral-800" onClick={clearCart}>
               Empty Bag
             </button>
             <button
               className="flex-1 py-2 rounded-lg bg-green-700 text-white disabled:opacity-60"
-              disabled={items.length === 0 || checkoutState === 'loading'}
+              disabled={items.length === 0}
               onClick={handleCheckout}
             >
-              {checkoutState === 'loading' ? 'Processing…' : 'Go to Checkout'}
+              Go to Checkout
             </button>
           </div>
         </div>

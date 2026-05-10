@@ -25,7 +25,7 @@ type CheckoutData = {
 export default function CheckoutPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { items, getTotal, fetchCart } = useCart();
+  const { items, getTotal, fetchCart, clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -127,7 +127,9 @@ export default function CheckoutPage() {
       }
 
       const order = await response.json();
-      
+
+      // Clear Zustand store — DB cart already cleared by the checkout API
+      clearCart().catch(() => {});
       toast.success("Order placed successfully!");
       router.push(`/orders/${order.id}`);
     } catch (error: unknown) {

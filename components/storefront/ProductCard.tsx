@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart';
-import { toast } from 'sonner';
 
 interface ProductCardProps {
   id: string;
@@ -31,9 +30,6 @@ export default function ProductCard({
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     addItem(id);
-    toast.success(`${name} added to cart`, {
-      description: 'View your cart to checkout',
-    });
   };
 
   return (

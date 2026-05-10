@@ -29,12 +29,10 @@ const hydroponicsRight = [
 ];
 
 export default function HomePage() {
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (localStorage.getItem('foliage_welcome_shown')) {
-      setShowWelcome(false);
-    }
+    setShowWelcome(!localStorage.getItem('foliage_welcome_shown'));
   }, []);
 
   const dismiss = () => {
@@ -45,7 +43,7 @@ export default function HomePage() {
   return (
     <>
       <AnimatePresence>
-        {showWelcome && (
+        {showWelcome === true && (
           <motion.div
             key="welcome"
             initial={{ opacity: 1 }}

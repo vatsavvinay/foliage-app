@@ -169,6 +169,17 @@ model Review {
   @@index([productId])
 }
 
+// Password reset token — expires after 1 hour, deleted on use
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
 // Product model
 model Product {
   id          String     @id @default(cuid())

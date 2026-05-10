@@ -201,12 +201,12 @@ export default function SignInPage() {
             Create one
           </a>
         </p>
-        {/* <p className="text-gray-600">
+        <p className="text-gray-600">
           Forgot password?{' '}
-          <a href="/auth/reset-password" className="text-sage-600 font-medium hover:underline">
+          <a href="/auth/forgot-password" className="text-sage-600 font-medium hover:underline">
             Reset it
           </a>
-        </p> */}
+        </p>
       </div>
     </div>
   );

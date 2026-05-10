@@ -16,8 +16,19 @@ export async function GET() {
     const user = await getCurrentUser();
 
     if (user?.id) {
-      // Merge any existing guest cart into the user's cart on sign-in
       const cookieStore = await cookies();
+
+      // Admins don't shop — purge any stale cart items and return empty
+      if ((user as { role?: string }).role === 'ADMIN') {
+        cookieStore.delete("cart_session_id");
+        const adminCart = await prisma.cart.findUnique({ where: { userId: user.id } });
+        if (adminCart) {
+          await prisma.cartItem.deleteMany({ where: { cartId: adminCart.id } });
+        }
+        return NextResponse.json({ id: null, items: [] });
+      }
+
+      // Merge any existing guest cart into the user's cart on sign-in
       const guestSessionId = cookieStore.get("cart_session_id")?.value;
       if (guestSessionId) {
         await mergeGuestCartToUser(guestSessionId, user.id);
@@ -40,6 +51,11 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
+
+    if ((user as { role?: string } | undefined)?.role === 'ADMIN') {
+      return NextResponse.json({ error: "Admins cannot add items to cart" }, { status: 403 });
+    }
+
     const body = await request.json();
 
     const validatedData = addToCartSchema.parse(body);

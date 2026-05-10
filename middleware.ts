@@ -48,8 +48,9 @@ export async function middleware(request: NextRequest) {
 
   /**
    * Profile routes - require authentication
+   * Checkout is intentionally excluded: guests can check out without an account
    */
-  if (pathname.startsWith('/profile') || pathname.startsWith('/checkout')) {
+  if (pathname.startsWith('/profile')) {
     if (!token) {
       const url = request.nextUrl.clone();
       url.pathname = '/auth/signin';

@@ -1,8 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { StatusUpdateForm } from './StatusUpdateForm';
 
 type Params = {
   params: { id: string };
@@ -43,6 +45,12 @@ export default async function AdminOrderDetail({ params }: Params) {
           <p className="font-semibold">Status: {order.status}</p>
           <p className="text-sm text-neutral-500">Total: ${order.total.toFixed(2)}</p>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <Link href="/admin/orders" className="text-sm text-green-600 hover:text-green-800">
+          ← Back to Orders
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -103,6 +111,8 @@ export default async function AdminOrderDetail({ params }: Params) {
               <span>${order.total.toFixed(2)}</span>
             </div>
           </div>
+
+          <StatusUpdateForm orderId={order.id} currentStatus={order.status} />
         </aside>
       </div>
     </div>
